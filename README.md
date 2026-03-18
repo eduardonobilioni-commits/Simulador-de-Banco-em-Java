@@ -1,52 +1,46 @@
-# 💳 Simulador de Banco em Java
+# Simulador Banco Java
 
-Projeto desenvolvido em **Java** com foco em praticar **lógica de programação** e **Programação Orientada a Objetos (POO)**, utilizando interação via terminal.
+Simulador-banco-java é um projeto simples em Java que demonstra conceitos de orientação a objetos (herança, polimorfismo, encapsulamento) através de um simulador bancário de linha de comando.
 
-Este projeto faz parte dos meus estudos em Java e da minha formação em **Engenharia de Software**, com o objetivo de consolidar conceitos fundamentais da linguagem.
+Funcionalidades principais
+
+- Criar Conta Corrente e Conta Poupança (via menu interativo)
+- Depositar, sacar, transferir entre contas
+- Extrato simples (histórico em memória)
+- Aplicar rendimento em Conta Poupança
+
+Arquitetura / Estrutura
+
+- Código-fonte em `org/nobilioni/banco`
+- Classe principal: `org.nobilioni.banco.SimuladorDeBanco` (main)
+- Classes principais: `Cliente`, `Conta` (abstract), `ContaCorrente`, `ContaPoupanca`.
+
+Como compilar e executar (linha de comando)
+
+1. Compilar todos os fontes e colocar classes em `out/`:
+
+   mkdir -p out && javac -d out $(find org -name "*.java")
+
+2. Executar a aplicação:
+
+   java -cp out org.nobilioni.banco.SimuladorDeBanco
+
+Observação: executar via IDE (IntelliJ/IDEA) também funciona — importe como projeto Java simples.
+
+Problemas conhecidos e sugestões
+
+- O construtor de `Conta` seta a senha para "0000" ignorando o parâmetro — comportamento inesperado.
+- Método `transferir(...)` contém chaves/parênteses mal posicionadas que podem permitir transferências indevidas. Rever a lógica de checagem de saldo.
+- `ContaPoupanca` define um `getSaldo()` privado que retorna 0 — impede operações corretas. Ajustar para usar `this.saldo` ou implementar getter correto.
+- No loop do `main`, a condição de saída/numeração das opções está inconsistente (opções 5/6/7). Revisar menu.
+
+Contribuições
+
+Pull requests são bem-vindos. Abra uma issue descrevendo a mudança antes de implementar alterações significativas.
+
+Licença
+
+Adicionar licença conforme preferência (ex: MIT). 
 
 ---
-
-## 🚀 Funcionalidades
-
-- Criar conta bancária
-- Consultar saldo
-- Realizar depósitos
-- Realizar saques com validação de saldo
-- Visualizar extrato de transações
-- Menu interativo via terminal
-
----
-
-## 🖥️ Exemplo de Execução
-
-![Execução do simulador de banco no terminal](execucao-terminal.jpg)
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-- Java
-- IntelliJ IDEA
-- Git e GitHub
-
----
-
-## 📚 Conceitos Praticados
-
-- Programação Orientada a Objetos (POO)
-- Criação e uso de classes e métodos
-- Encapsulamento
-- Estruturas condicionais (`if / else`)
-- Estruturas de repetição (`while`)
-- Listas (`ArrayList`)
-- Entrada de dados com `Scanner`
-- Organização e separação de responsabilidades no código
-- Lógica de programação
-
----
-
-## ▶️ Como Executar o Projeto
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/eduardonobilioni-commits/simulador-banco-java.git
+Arquivo gerado automaticamente com base na análise dos fontes do projeto.
