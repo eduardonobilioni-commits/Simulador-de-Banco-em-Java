@@ -39,4 +39,9 @@ public class ContaPoupanca extends Conta {
     public void transferir(double valor) {
 
     }
+
+    @Override
+    public double getSaldo() {
+        return 0;
+    }
 }

@@ -1,111 +1,129 @@
-import org.nobilioni.banco.*;
-import org.nobilioni.banco.Conta;
+package org.nobilioni.banco;
 
-public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-    Cliente titular = new Cliente();
-    titular.setNome("Eduardo");
+import java.util.Scanner;
 
-    Cliente cliente2 = new Cliente();
-    cliente2.setNome("Sistema Banco");
-    Conta contaDestino = new ContaPoupanca(new Cliente("Recebedor"), "0000");
+public class SimuladorDeBanco {
+    public static void main(String[] args) {
+        // 1. CARREGAR O SALDO DO ARQUIVO ANTES DE TUDO
+        double saldoRecuperado = GerenciadorArquivos.lerSaldo();
 
-    System.out.println("--- BEM-VINDO AO BANCO NOBILIONI ---");
-    System.out.println("1 - Abrir Conta Corrente");
-    System.out.println("2 - Abrir Conta Poupança");
-    System.out.print("Escolha o tipo de conta: ");
-    int tipo = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        Cliente titular = new Cliente();
+        titular.setNome("Eduardo");
 
-    Conta conta; // Declaramos a variável do tipo genérico (Polimorfismo!)
+        // Conta de destino fixa para testes de transferência
+        Conta contaDestino = new ContaPoupanca(new Cliente("Sistema Banco"), "0000");
 
-    if (tipo == 1) {
-        conta = new ContaCorrente(titular, "1234");
-        System.out.println("Conta Corrente criada com sucesso!");
-    } else {
-        conta = new ContaPoupanca(titular, "1234");
-        System.out.println("Conta Poupança criada com sucesso!");
-    }
+        System.out.println("--- BEM-VINDO AO BANCO NOBILIONI ---");
+        System.out.println("1 - Abrir Conta Corrente");
+        System.out.println("2 - Abrir Conta Poupança");
+        System.out.print("Escolha o tipo de conta: ");
+        int tipo = scanner.nextInt();
 
+        Conta conta; // Variável polimórfica
+
+        // 2. CRIAR A CONTA APENAS UMA VEZ (O 'NEW' É AQUI)
+        if (tipo == 1) {
+            conta = new ContaCorrente(titular, "1234");
+            System.out.println("=> Conta Corrente aberta.");
+        } else {
+            conta = new ContaPoupanca(titular, "1234");
+            System.out.println("=> Conta Poupança aberta.");
+        }
+
+        // 3. INJETAR O SALDO RECUPERADO (SÓ AQUI E UMA VEZ!)
+        if (saldoRecuperado > 0) {
+            conta.setSaldoInicial(saldoRecuperado);
+            System.out.println("=> Sistema: Saldo de R$ " + saldoRecuperado + " recuperado do arquivo.");
+        }
 
         int opcao;
         String senhaDigitada;
 
         do {
-            conta.mostrarMenu();
+            System.out.println("\n--- MENU DE OPERAÇÕES ---");
+            System.out.println("1-Saldo | 2-Sacar | 3-Depositar | 4-Extrato | 5-Rendimento | 6-Transferir | 7-SAIR");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
 
             switch (opcao) {
                 case 1:
-                    conta.mostrarSaldo();
-                    break;
-
-                case 2:
-                    System.out.print("Digite o valor para sacar: R$ ");
-                    double valorSaque = scanner.nextDouble();
-                    System.out.print("Digite sua senha: ");
-                    senhaDigitada = scanner.next();
-
-                    if (senhaDigitada.equals(conta.getSenha())) {
-                        conta.sacar(valorSaque);
-                    } else {
-                        System.out.println("*** SENHA INCORRETA ***");
-                    }
-                    break;
-
-                case 3:
-                    System.out.print("Digite o valor para depositar: R$ ");
-                    double valorDeposito = scanner.nextDouble();
-                    System.out.print("Digite sua senha: ");
-                    senhaDigitada = scanner.next();
-
-                    if (senhaDigitada.equals(conta.getSenha())) {
-                        conta.depositar(valorDeposito);
-                    } else {
-                        System.out.println("*** SENHA INCORRETA ***");
-                    }
-                    break;
-
-                case 4:
-                    System.out.print("Digite sua senha para ver o extrato: ");
+                    System.out.print("Senha: ");
                     senhaDigitada = scanner.next();
                     if (senhaDigitada.equals(conta.getSenha())) {
-                        conta.mostrarExtrato();
-                    } else {
-                        System.out.println("*** SENHA INCORRETA ***");
-                    }
-                    break;
-
-                case 5:
-                    System.out.println("Encerrando programa. Até logo!");
-                    break;
-
-                case 6:
-                    if (conta instanceof ContaPoupanca) {
-                        ((ContaPoupanca) conta).aplicarRendimento();
-                    } else {
-                        System.out.println("Erro: Esta opção só está disponível para Conta Poupança.");
-                    }
-                    break;
-
-                case 7:
-                    System.out.print("Digite o valor para transferência: R$ ");
-                    double vTransf = scanner.nextDouble();
-                    System.out.print("Digite sua senha: ");
-                    senhaDigitada = scanner.next();
-
-                    if (senhaDigitada.equals(conta.getSenha())) {
-                        conta.transferir(vTransf, contaDestino);
+                        conta.mostrarSaldo();
                     } else {
                         System.out.println("Senha incorreta!");
                     }
                     break;
 
+                case 2:
+                    System.out.print("Valor do saque: R$ ");
+                    double valorSaque = scanner.nextDouble();
+                    System.out.print("Senha: ");
+                    senhaDigitada = scanner.next();
+                    if (senhaDigitada.equals(conta.getSenha())) {
+                        conta.sacar(valorSaque);
+                        // SALVAR NO DISCO APÓS A OPERAÇÃO
+                        GerenciadorArquivos.salvarSaldo(conta.getSaldo());
+                        GerenciadorArquivos.salvarNoExtrato("SAQUE: - R$ " + valorSaque);
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Valor do depósito: R$ ");
+                    double valorDeposito = scanner.nextDouble();
+                    System.out.print("Senha: ");
+                    senhaDigitada = scanner.next();
+                    if (senhaDigitada.equals(conta.getSenha())) {
+                        conta.depositar(valorDeposito);
+                        // SALVAR NO DISCO APÓS A OPERAÇÃO
+                        GerenciadorArquivos.salvarSaldo(conta.getSaldo());
+                        GerenciadorArquivos.salvarNoExtrato("DEPÓSITO: + R$ " + valorDeposito);
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Senha para extrato: ");
+                    senhaDigitada = scanner.next();
+                    if (senhaDigitada.equals(conta.getSenha())) {
+                        conta.mostrarExtrato();
+                    } else {
+                        System.out.println("Senha incorreta!");
+                    }
+                    break;
+
+                case 5:
+                    if (conta instanceof ContaPoupanca) {
+                        ((ContaPoupanca) conta).aplicarRendimento();
+                        GerenciadorArquivos.salvarSaldo(conta.getSaldo());
+                        GerenciadorArquivos.salvarNoExtrato("RENDIMENTO APLICADO");
+                    } else {
+                        System.out.println("Opção exclusiva para Conta Poupança.");
+                    }
+                    break;
+
+                case 6:
+                    System.out.print("Valor da transferência: R$ ");
+                    double vTransf = scanner.nextDouble();
+                    System.out.print("Senha: ");
+                    senhaDigitada = scanner.next();
+                    if (senhaDigitada.equals(conta.getSenha())) {
+                        conta.transferir(vTransf, contaDestino);
+                        GerenciadorArquivos.salvarSaldo(conta.getSaldo());
+                        GerenciadorArquivos.salvarNoExtrato("TRANSFERÊNCIA ENVIADA: - R$ " + vTransf);
+                    }
+                    break;
+
+                case 7:
+                    System.out.println("Saindo... Saldo final salvo.");
+                    break;
+
                 default:
-                    System.out.println("*** OPÇÃO INVÁLIDA ***");
+                    System.out.println("Opção inválida.");
             }
         } while (opcao != 7);
 
         scanner.close();
     }
-
+}
