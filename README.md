@@ -1,45 +1,24 @@
-# Simulador Banco Java
+# 🏦 Simulador de Banco Nobilioni v2.0
 
-Simulador-banco-java é um projeto simples em Java que demonstra conceitos de orientação a objetos (herança, polimorfismo, encapsulamento) através de um simulador bancário de linha de comando.
+Um sistema de simulação bancária robusto desenvolvido em **Java 25**, explorando as últimas evoluções da JVM e boas práticas de Programação Orientada a Objetos.
 
-Funcionalidades principais
+## 🚀 Funcionalidades
 
-- Criar Conta Corrente e Conta Poupança (via menu interativo)
-- Depositar, sacar, transferir entre contas
-- Extrato simples (histórico em memória)
-- Aplicar rendimento em Conta Poupança
+- **Persistência de Estado:** Saldo armazenado em `saldo_banco.txt` com suporte a `Locale.US` para garantir portabilidade entre sistemas (Ubuntu/Windows).
+- **Log de Transações:** Histórico de extrato persistente com modo de escrita incremental (Append).
+- **Polimorfismo Avançado:** Gestão de diferentes tipos de conta (Corrente/Poupança) utilizando herança e classes abstratas.
+- **Segurança:** Sistema de autenticação por senha para todas as operações financeiras.
 
-Arquitetura / Estrutura
+## 🛠️ Stack Tecnológica
 
-- Código-fonte em `org/nobilioni/banco`
-- Classe principal: `org.nobilioni.banco.SimuladorDeBanco` (main)
-- Classes principais: `Cliente`, `Conta` (abstract), `ContaCorrente`, `ContaPoupanca`.
+- **Linguagem:** Java 25 (LTS ou Current)
+- **Recursos:** I/O Stream, Enhanced Switch Case, e Modern File Handling.
+- **Arquitetura:** MVC simplificado (Model para as contas, Controller no Simulador e View via Console).
 
-Como compilar e executar (linha de comando)
+## ⚙️ Como Executar
 
-1. Compilar todos os fontes e colocar classes em `out/`:
+1. Compile o projeto: `javac org/nobilioni/banco/*.java`
+2. Inicie o simulador: `java org.nobilioni.banco.SimuladorDeBanco`
 
-   mkdir -p out && javac -d out $(find org -name "*.java")
-
-2. Executar a aplicação:
-
-   java -cp out org.nobilioni.banco.SimuladorDeBanco
-
-Observação: executar via IDE (IntelliJ/IDEA) também funciona — importe como projeto Java simples.
-
-Problemas conhecidos e sugestões
-
-- O construtor de `Conta` seta a senha para "0000" ignorando o parâmetro — comportamento inesperado.
-- Método `transferir(...)` contém chaves/parênteses mal posicionadas que podem permitir transferências indevidas. Rever a lógica de checagem de saldo.
-- `ContaPoupanca` define um `getSaldo()` privado que retorna 0 — impede operações corretas. Ajustar para usar `this.saldo` ou implementar getter correto.
-- No loop do `main`, a condição de saída/numeração das opções está inconsistente (opções 5/6/7). Revisar menu.
-
-Contribuições
-
-Pull requests são bem-vindos. Abra uma issue descrevendo a mudança antes de implementar alterações significativas.
-
-Licença
-
-Adicionar licença conforme preferência (ex: MIT). 
-
-
+---
+*Desenvolvido como estudo de caso para persistência de dados e arquitetura de objetos.*
