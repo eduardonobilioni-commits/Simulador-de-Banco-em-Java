@@ -5,7 +5,6 @@ Este documento descreve as funcionalidades implementadas nas classes do pacote o
 ## Visão geral das classes
 
 - Cliente
-  - Atributos: nome, cpf, rg, email, telefone, celular, endereco, cidade, estado, cep, complemento, bairro.
   - Métodos: getters e setters simples (encapsulamento de dados).
   - Uso de lógica: nenhuma validação; setters simplesmente atribuem valores.
 
