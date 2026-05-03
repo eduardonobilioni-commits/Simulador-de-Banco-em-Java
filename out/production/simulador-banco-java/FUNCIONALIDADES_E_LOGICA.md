@@ -99,6 +99,3 @@ Este documento descreve as funcionalidades implementadas nas classes do pacote o
 ## Conclusão
 
 O projeto demonstra conceitos fundamentais de orientação a objetos (herança, polimorfismo, encapsulamento) e usa estruturas de controle básicas (if/else, switch, loops) para implementar um simulador bancário simples. Existem alguns problemas de implementação que afetam a lógica (senha fixa, transferir com chaves erradas, método getSaldo retornando 0) que devem ser corrigidos para o sistema funcionar corretamente.
-
----
-Gerado automaticamente a partir da análise dos arquivos em org/nobilioni/banco.
